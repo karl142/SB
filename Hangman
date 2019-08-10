@@ -7,6 +7,7 @@ wrong_guesses = [] #Will house previously guessed wrong letters
 correct_guesses = [] #Will house correctly guessed letters in place
 lifetotal = 6 #Number of incorrect guesses before losing
 solved = 0 #Trigger for later while loop. When solved=1, loop ends
+corrnum=0
 
 print("HANGMAN")
 
@@ -23,7 +24,7 @@ def create_word():
 #If successful, adds letters in, if unsuccessful removes one life and adds incorrect letter to wrong_guesses
 #Finally returns values
 
-def letter_guess(word, wrong_guesses, correct_guesses, lifetotal):
+def letter_guess(word, wrong_guesses, correct_guesses, lifetotal,corrnum):
   print("Wrong Guesses: ")
   print(wrong_guesses)
   print("\n"+"Current Hits: ")
@@ -38,6 +39,7 @@ def letter_guess(word, wrong_guesses, correct_guesses, lifetotal):
       if letter == guess:
         correct_guesses[count]=guess
         print("Correct! \"" + guess + "\n"" is in the target word!")
+        corrnum += 1
       count += 1
   elif guess in wrong_guesses:
     print("You have already guessed " + guess + ". It is not in the target word")
@@ -45,17 +47,18 @@ def letter_guess(word, wrong_guesses, correct_guesses, lifetotal):
     print ("Sorry! " + guess + " is not in the target word!")
     lifetotal -= 1
     wrong_guesses.append(guess)
-  return correct_guesses, wrong_guesses, lifetotal
+  return correct_guesses, wrong_guesses, lifetotal, corrnum
 
 #Loops through until solved=1 (achieved when len(word) == len(correct_guesses))
-def game_loop(word, wrong_guesses, correct_guesses, lifetotal):
+def game_loop(word, wrong_guesses, correct_guesses, lifetotal, corrnum):
   solved=0
   while solved==0:
-    correct_guesses, wrong_guesses, lifetotal = letter_guess(word, wrong_guesses, correct_guesses, lifetotal)
-    if len(word) == len(correct_guesses):
+    correct_guesses, wrong_guesses, lifetotal, corrnum = letter_guess(word, wrong_guesses, correct_guesses, lifetotal, corrnum)
+    print("\n \n \n")
+    if len(word) == corrnum:
       solved=1
 
 
 
 word, correct_guesses = create_word()
-game_loop(word, wrong_guesses, correct_guesses, lifetotal)
+game_loop(word, wrong_guesses, correct_guesses, lifetotal, corrnum)

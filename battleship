@@ -1,0 +1,29 @@
+def make_board():
+  board=[]
+  for i in range(64):
+    board.append("[ ]")
+  return board
+
+def print_board():
+  global board
+  sboard = "  ".join(board)
+  for i in range(8):
+    print(sboard[i*40: (i*40)+40] + '\n')
+
+xTemp = randmon.randint(8)
+
+def add_ships():
+  global board
+  xTemp = random.randint(8)
+  yTemp = 
+
+board = make_board()
+print_board()
+
+
+
+Ncarrier = 5
+Nbattleship = 4
+Ncruiser = 3
+Nsub = 3
+Ndestroyer = 2

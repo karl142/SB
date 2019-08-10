@@ -1,20 +1,19 @@
 import random 
 # List of possible words
-a=["awkward","bagpipes","banjo","bungler","croquet","crypt","dwarves","fervid","fishhook","fjord","gazebo","gypsy","haiku","haphazard","hyphen","ivory","jazzy","jiffy","jinx","jukebox","kayak","kiosk","klutz","memento","mystify","numbskull","ostracize","oxygen","pajama","phlegm","pixel","polka","quad","quip","rhythmic","rogue","sphinx","squawk","swivel","toady","twelfth","unzip","waxy","wildebeest","yacht","zealous","zigzag","zippy","zombie"]
+word_possiblities = ["awkward","bagpipes","banjo","bungler","croquet","crypt","dwarves","fervid","fishhook","fjord","gazebo","gypsy","haiku","haphazard","hyphen","ivory","jazzy","jiffy","jinx","jukebox","kayak","kiosk","klutz","memento","mystify","numbskull","ostracize","oxygen","pajama","phlegm","pixel","polka","quad","quip","rhythmic","rogue","sphinx","squawk","swivel","toady","twelfth","unzip","waxy","wildebeest","yacht","zealous","zigzag","zippy","zombie"]
 
 #Initializations
 wrong_guesses = [] #Will house previously guessed wrong letters
 correct_guesses = [] #Will house correctly guessed letters in place
-lifetotal = 6 #Number of incorrect guesses before losing
-solved = 0 #Trigger for later while loop. When solved=1, loop ends
+lifetotal = 8 #Number of incorrect guesses before losing
 corrnum=0
 
 print("HANGMAN")
 
 #This function chooses word from list and returns word and a list of "_"s equal to the length fo the word.
 def create_word():
-  choice = random.randint(1,49)
-  word = a[choice]
+  global correct_guesses 
+  word=random.choice(word_possiblities)
   for i in range(len(word)):
     correct_guesses.append("_")
   return word, correct_guesses
@@ -24,7 +23,8 @@ def create_word():
 #If successful, adds letters in, if unsuccessful removes one life and adds incorrect letter to wrong_guesses
 #Finally returns values
 
-def letter_guess(word, wrong_guesses, correct_guesses, lifetotal,corrnum):
+def letter_guess():
+  global word, wrong_guesses, correct_guesses, lifetotal, corrnum
   print("Wrong Guesses: ")
   print(wrong_guesses)
   print("\n"+"Current Hits: ")
@@ -32,10 +32,10 @@ def letter_guess(word, wrong_guesses, correct_guesses, lifetotal,corrnum):
   print("\n"+"Life total: "+ str(lifetotal) + "\n")
 
   guess = input("Guess a letter: ")
+  count = 0
 
-  if guess in word and not guess in wrong_guesses:
+  if guess in word and guess not in wrong_guesses:
     for letter in word:
-      count=0
       if letter == guess:
         correct_guesses[count]=guess
         print("Correct! \"" + guess + "\n"" is in the target word!")
@@ -50,15 +50,15 @@ def letter_guess(word, wrong_guesses, correct_guesses, lifetotal,corrnum):
   return correct_guesses, wrong_guesses, lifetotal, corrnum
 
 #Loops through until solved=1 (achieved when len(word) == len(correct_guesses))
-def game_loop(word, wrong_guesses, correct_guesses, lifetotal, corrnum):
-  solved=0
-  while solved==0:
-    correct_guesses, wrong_guesses, lifetotal, corrnum = letter_guess(word, wrong_guesses, correct_guesses, lifetotal, corrnum)
+def game_loop():
+  global word, wrong_guesses, correct_guesses, lifetotal, corrnum
+  while len(word) != corrnum and lifetotal > 0:
+    correct_guesses, wrong_guesses, lifetotal, corrnum = letter_guess()
     print("\n \n \n")
-    if len(word) == corrnum:
-      solved=1
-
-
+  if len(word) == corrnum:
+    print("Congratulations! You have won the game. The word was " + word)
+  else:
+    print("You are terrible and have lost. I feel sorry for you and your future offspring for their misfortune. The word was " + word + ".")
 
 word, correct_guesses = create_word()
-game_loop(word, wrong_guesses, correct_guesses, lifetotal, corrnum)
+game_loop()

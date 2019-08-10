@@ -1,0 +1,64 @@
+import random 
+a=["awkward","bagpipes","banjo","bungler","croquet","crypt","dwarves","fervid","fishhook","fjord","gazebo","gypsy","haiku","haphazard","hyphen","ivory","jazzy","jiffy","jinx","jukebox","kayak","kiosk","klutz","memento","mystify","numbskull","ostracize","oxygen","pajama","phlegm","pixel","polka","quad","quip","rhythmic","rogue","sphinx","squawk","swivel","toady","twelfth","unzip","waxy","wildebeest","yacht","zealous","zigzag","zippy","zombie"]
+
+wrong_guesses = []
+correct_guesses = []
+lifetotal = 6
+solved = 0
+
+lst = []
+
+print("HANGMAN")
+
+def create_word():
+  choice = random.randint(1,49)
+  word = a[choice]
+  for i in range(len(word)):
+    correct_guesses.append("_")
+  return word, correct_guesses
+
+word, correct_guesses = create_word()
+
+def letter_guess():
+  print("Previous Guesses: " + wrong_guesses)
+  print("Current Hits: " + correct_guesses)
+  print("Life total: "+ str(lifetotal) + "\n")
+
+  guess = input("Guess a letter: ")
+
+  if guess in word and not guess in wrong_guesses:
+    for letter in word:
+      count=0
+      if letter == guess:
+        correct_guesses[count]
+        print("Correct! " + guess + "is in the target word!")
+      count += 1
+  elif guess in word and guess in wrong_guesses:
+    print("You have already guessed " + guess + ". It is not in the target word")
+  else: 
+    print ("Sorry! " + guess + " is not in the target word!")
+    lifetotal -= 1
+    wrong_guesses.append(guess)
+  return correct_guesses, wrong_guesses, lifetotal
+
+letter_guess()
+
+def game_loop():
+  while solved==0:
+    correct_guesses, wrong_guesses, lifetotal = letter_guess()
+    if len(word) == len(correct_guesses):
+      #solved=1
+
+
+game_loop()
+  
+
+
+
+
+
+  
+
+#
+
+

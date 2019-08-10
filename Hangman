@@ -47,7 +47,7 @@ def game_loop():
   while solved==0:
     correct_guesses, wrong_guesses, lifetotal = letter_guess()
     if len(word) == len(correct_guesses):
-      #solved=1
+      solved=1
 
 
 game_loop()

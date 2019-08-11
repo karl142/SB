@@ -23,8 +23,8 @@ def rand_pos(boat_size):
     xTemp = random.randint(1,8-boat_size)
     yTemp = random.randint(1,8)
   elif dirTemp==3: # DOWN
-    xTemp = random.randint(1,8-boat_size)
-    yTemp = random.randint(1,8)
+    xTemp = random.randint(1,8)
+    yTemp = random.randint(1,8-boat_size)
   else: # LEFT
     xTemp = random.randint(boat_size,8)
     yTemp = random.randint(1,8)
@@ -39,24 +39,29 @@ def check_ship(boat_size):
     boat_start, dirTemp = rand_pos(boat_size)
     for i in range(0, boat_size-1):
       if dirTemp==1:
-        if board[boat_start - (8*i)] == "[S]":
-          check_unblocked +=1
-      elif dirTemp==2:
-        if board[boat_start + i] == "[S]":
-          check_unblocked +=1
-      elif dirTemp==3:
         try:
-          if board[boat_start + (8*i)] == "[S]":
+          if board[boat_start - (8*i)] == "[S]":
             check_unblocked +=1
         except:
           print(i)
           print(boat_start)
-          print(board)
-          print(check_unblocked)
-
-      else:
-        if board[boat_start - i] == "[S]":
+          print(len(board))
+          print(dirTemp)
+      elif dirTemp==2:
+        if board[boat_start + i] == "[S]":
           check_unblocked +=1
+      elif dirTemp==3:
+        if board[boat_start + (8*i)] == "[S]":
+          check_unblocked +=1
+      else:
+        try:
+          if board[boat_start - i] == "[S]":
+            check_unblocked +=1
+        except:
+          print(i)
+          print(boat_start)
+          print(len(board))
+          print(dirTemp)
   return boat_start, dirTemp
 
 def place_boat(boat_size):

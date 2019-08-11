@@ -1,3 +1,7 @@
+import random
+
+boat_size_list=[5,4,3,3,2]
+
 def make_board():
   board=[]
   for i in range(64):
@@ -11,55 +15,72 @@ def print_board():
     print(sboard[i*40: (i*40)+40] + '\n')
 
 def rand_pos(boat_size):
-  dirTemp = random.randint(4):
+  dirTemp = random.randint(1,4)
   if dirTemp==1: # UP
-    xTemp = random.randint(8)
-    yTemp = random.randint(boat_size:8)
+    xTemp = random.randint(1,8)
+    yTemp = random.randint(boat_size,8)
   elif dirTemp==2: # RIGHT
-    xTemp = random.randint(8-boat_size)
-    yTemp = random.randint(8)
+    xTemp = random.randint(1,8-boat_size)
+    yTemp = random.randint(1,8)
   elif dirTemp==3: # DOWN
-    xTemp = random.randint(8-boat_size)
-    yTemp = random.randint(8)
+    xTemp = random.randint(1,8-boat_size)
+    yTemp = random.randint(1,8)
   else: # LEFT
-    xTemp = random.randint(boat_size:8)
-    yTemp = random.randint(8)
-  start_ship = (yTemp - 1)*8 + xTemp
-  
-  return start_ship, dirTemp, dirMove
+    xTemp = random.randint(boat_size,8)
+    yTemp = random.randint(1,8)
+  boat_start = (yTemp - 1)*8 + xTemp
+  return boat_start, dirTemp
 
-def add_ship():
+def check_ship(boat_size):
   global board
-  solved1=0
-  while solved1==0:
-    fault=0
-    while fault=0:
-      xTemp, yTemp, dirTemp, dirMove = rand_pos()
+  check_unblocked=0
+  while check_unblocked < boat_size:
+    check_unblocked = 0
+    boat_start, dirTemp = rand_pos(boat_size)
     for i in range(0, boat_size-1):
       if dirTemp==1:
-        if board[start_ship - (8*i)] == "[S]":
+        if board[boat_start - (8*i)] == "[S]":
           check_unblocked +=1
       elif dirTemp==2:
-        if board[start_ship + i] == "[S]":
-          check_unblocked=1
+        if board[boat_start + i] == "[S]":
+          check_unblocked +=1
       elif dirTemp==3:
-        if board[start_ship + (8*i)] == "[S]":
-          check_unblocked=1
+        try:
+          if board[boat_start + (8*i)] == "[S]":
+            check_unblocked +=1
+        except:
+          print(i)
+          print(boat_start)
+          print(board)
+          print(check_unblocked)
+
       else:
-        if board[start_ship - i] == "[S]":
-          check_unblocked=1
+        if board[boat_start - i] == "[S]":
+          check_unblocked +=1
+  return boat_start, dirTemp
+
+def place_boat(boat_size):
+  boat_start, dirTemp = check_ship(boat_size)
+  for i in range(0,boat_size-1):
+    if dirTemp==1:
+      board[boat_start - (8*i)] = "[S]"
+    elif dirTemp==2:
+      board[boat_start + i] = "[S]"
+    elif dirTemp==3:
+      board[boat_start + (8*i)] = "[S]"
+    else:
+      board[boat_start - i] = "[S]"
+  return board
+
+def all_boats():
+  for i in boat_size_list:
+    place_boat(i)
+  return board
 
 
-    for i in range(0,boat_size-1):
-      if dirTemp==1:
-        board[start_ship - (8*i)] = "[S]"
-      elif dirTemp==2:
-        board[start_ship + i] = "[S]"
-      elif dirTemp==3:
-        board[start_ship + (8*i)] = "[S]"
-      else:
-        board[start_ship - i] = "[S]"
-      
+
+
+  
         
         
         
@@ -70,7 +91,8 @@ def add_ship():
 
 board = make_board()
 print_board()
-
+board = all_boats()
+print_board()
 
 
 boat1 = 5

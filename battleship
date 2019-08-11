@@ -10,20 +10,49 @@ def print_board():
   for i in range(8):
     print(sboard[i*40: (i*40)+40] + '\n')
 
-xTemp = randmon.randint(8)
+def rand_pos(boat_size):
+  dirTemp = random.randint(4):
+  if dirTemp==1: # UP
+    xTemp = random.randint(8)
+    yTemp = random.randint(boat_size:8)
+    dirMove=-1
+  elif dirTemp==2: # RIGHT
+    xTemp = random.randint(8-boat_size)
+    yTemp = random.randint(8)
+    dirMove=1
+  elif dirTemp==3: # DOWN
+    xTemp = random.randint(8-boat_size)
+    yTemp = random.randint(8)
+    dirMove=1
+  else: # LEFT
+    xTemp = random.randint(boat_size:8)
+    yTemp = random.randint(8)
+    dirMove=-1
+  
+  return xTemp, yTemp, dirTemp, dirMove
+
+
 
 def add_ships():
   global board
-  xTemp = random.randint(8)
-  yTemp = 
+  solved1=0
+  while solved1==0:
+    
+    xTemp, yTemp, dirTemp = rand_pos()
+
+    for i in range(boatsize):
+      if board
+    
+
+  
 
 board = make_board()
 print_board()
 
 
 
-Ncarrier = 5
-Nbattleship = 4
-Ncruiser = 3
-Nsub = 3
-Ndestroyer = 2
+boat1 = 5
+boat2 = 4
+boat3 = 3
+boat4 = 3
+boat5 = 2

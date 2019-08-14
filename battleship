@@ -4,106 +4,60 @@ import math, random
 boardsize = 8
 
 #This function takes size and makes a board square by square. The square number, x coordinate, y coordinate, status, and name (b1,b2...etc) are saved in separate lists and returned.
-def make_board(size):
-  squarenum_list = []
-  xpos_list = []
-  ypos_list = []
+def make_board(boardsize):
   status_list = []
-  squarename_list = []
-
-  for square in range(1,size**2+1):
-    squarenum = square
-    squarenum_list.append(squarenum)
-    xpos = squarenum%size
-    if xpos == 0:
-      xpos = 8
-    xpos_list.append(xpos)
-    ypos_list.append(math.ceil(squarenum/size))
+  for square in range(boardsize**2):
     status_list.append('[ ]')
-    squarename_list.append('b' + str(squarenum))
-  return squarenum_list, xpos_list, ypos_list, status_list, squarename_list
+  return status_list
 
 def print_board(status_list, boardsize):
   board_s = "  ".join(status_list)
+  print("    A    B    C    D    E    F    G    H \n")
   for line in range(boardsize):
-    print(board_s[line*(boardsize*5): line*(boardsize*5)+(boardsize*5)] + '\n')
+    print(str(line+1) + "  " + board_s[line*(boardsize*5): line*(boardsize*5)+(boardsize*5)] + '\n')
 
-def setup_ship(status_list, ship_size, boardsize):
-  def start_loc(status_list, ship_size, boardsize):
-    ship_dir = random.randint(1,4)
-    if ship_dir == 1: #UP
-      x_start = random.randint(1,boardsize)
-      y_start = random.randint(ship_size,boardsize)
-    elif ship_dir == 2: #RIGHT
-      x_start = random.randint(1,boardsize-ship_size)
-      y_start = random.randint(1,boardsize)
-    elif ship_dir == 3: #DOWN
-      x_start = random.randint(1,boardsize)
-      y_start = random.randint(1,boardsize-ship_size)
-    elif ship_dir == 4: #LEFT
-      x_start = random.randint(ship_size,boardsize)
-      y_start = random.randint(1,boardsize)
-    ship_start = y_start*(boardsize-1) + x_start
-    return ship_start, ship_dir
+def place_ship(status_list, boardsize, shipsize):
+  ship_start_s = input("The current ship is " + str(shipsize) + ". Pick a starting location (e.g. A1) \n\n")
   
-  def check_ship(ship_start, ship_dir, ship_size, boardsize):
-    if ship_dir == 1:
-      for square in range(0,ship_size):
-        if status_list[ship_start - (square*boardsize)] != '[ ]':
-          return False
-    elif ship_dir == 2:
-      for square in range(0,ship_size):
-        if status_list[ship_start + square] != '[ ]':
-          return False
-    elif ship_dir == 3:
-      for square in range(0,ship_size):
-        if status_list[ship_start + (square*boardsize)] != '[ ]':
-          return False
-    elif ship_dir == 4:
-      for square in range(0,ship_size):
-        if status_list[ship_start - square] != '[ ]':
-          return False
-    print(ship_start)
-    print(ship_dir)
-    print(ship_size)
-    print(boardsize)
-    print(square)
-    return True
-      
-  def update_ship(ship_start, ship_dir, ship_size, boardsize):
-    if ship_dir == 1:
-      for square in range(0,ship_size):
-        status_list[ship_start - (square*boardsize)] = '[X]'
-    elif ship_dir == 2:
-      for square in range(0,ship_size):
-        status_list[ship_start + square] = '[X]'
-    elif ship_dir == 3:
-      for square in range(0,ship_size):
-        status_list[ship_start + (square*boardsize)] = '[X]'
-    elif ship_dir == 4:
-      for square in range(0,ship_size):
-        status_list[ship_start - square] = '[X]'
-    return status_list
+  Xcount=1
+  Xlist=['A','B','C','D','E','F','G','H']
+  for i in range(len(Xlist)):
+    if str(i) in ship_start_s:
+      Xnum = Xcount
+    Xcount += 1
+
+  Ycount=1
+  Ylist=['1','2','3','4','5','6','7','8']
+  for i in range(len(Ylist)):
+    if str(i) in ship_start_s:
+      Ynum = Ycount
+    Ycount +=1
+
+  ship_start = ((Ycount - 1)* 8 + Xcount) - 1
+
+  directions = []
+  if ship_start <= 32:
+    directions.append("down")
+  if ship_start >= 33:
+    directions.append("up")
+  if ship_start % boardsize >= 5:
+    directions.append("left")
+  if ship_start % boardsize <= 4:
+    directions.append("right")
+  print("\n\nPossible directions: \n")
+  for direction in directions:
+    print(direction)
   
-  check = False
+  ship_dir_s = input("\nChoose a direction for the rest of the ship: ")
 
-  while check==False:
-    ship_start, ship_dir = start_loc(status_list, ship_size, boardsize)
-    check = check_ship(ship_start, ship_dir, ship_size, boardsize)
-
-  return update_ship(ship_start, ship_dir, ship_size, boardsize)
-
-#calling make_board function and saving lists
-squarenum_list, xpos_list, ypos_list, status_list, squarename_list = make_board(boardsize)
-
-print_board(status_list, boardsize)
+  dircount = 1
+  dirlist = ['up', 'right', 'down', 'left']
+  for i in range(len(dirlist)):
+    if i in ship_dir_s:
+      ship_dir=dircount
+    dircount += 1
 
 
-status_list = setup_ship(status_list, 5, boardsize)
-
-print_board(status_list,8)
-
-
-
-
-
+status_list = make_board(8)
+print_board(status_list, 8)
+place_ship(status_list, 8, 5)

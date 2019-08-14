@@ -1,107 +1,109 @@
-import random
+import math, random
 
-boat_size_list=[5,4,3,3,2]
+#Initializations
+boardsize = 8
 
-def make_board():
-  board=[]
-  for i in range(64):
-    board.append("[ ]")
-  return board
+#This function takes size and makes a board square by square. The square number, x coordinate, y coordinate, status, and name (b1,b2...etc) are saved in separate lists and returned.
+def make_board(size):
+  squarenum_list = []
+  xpos_list = []
+  ypos_list = []
+  status_list = []
+  squarename_list = []
 
-def print_board():
-  global board
-  sboard = "  ".join(board)
-  for i in range(8):
-    print(sboard[i*40: (i*40)+40] + '\n')
+  for square in range(1,size**2+1):
+    squarenum = square
+    squarenum_list.append(squarenum)
+    xpos = squarenum%size
+    if xpos == 0:
+      xpos = 8
+    xpos_list.append(xpos)
+    ypos_list.append(math.ceil(squarenum/size))
+    status_list.append('[ ]')
+    squarename_list.append('b' + str(squarenum))
+  return squarenum_list, xpos_list, ypos_list, status_list, squarename_list
 
-def rand_pos(boat_size):
-  dirTemp = random.randint(1,4)
-  if dirTemp==1: # UP
-    xTemp = random.randint(1,8)
-    yTemp = random.randint(boat_size,8)
-  elif dirTemp==2: # RIGHT
-    xTemp = random.randint(1,8-boat_size)
-    yTemp = random.randint(1,8)
-  elif dirTemp==3: # DOWN
-    xTemp = random.randint(1,8)
-    yTemp = random.randint(1,8-boat_size)
-  else: # LEFT
-    xTemp = random.randint(boat_size,8)
-    yTemp = random.randint(1,8)
-  boat_start = (yTemp - 1)*8 + xTemp
-  return boat_start, dirTemp
+def print_board(status_list, boardsize):
+  board_s = "  ".join(status_list)
+  for line in range(boardsize):
+    print(board_s[line*(boardsize*5): line*(boardsize*5)+(boardsize*5)] + '\n')
 
-def check_ship(boat_size):
-  global board
-  check_unblocked=0
-  while check_unblocked < boat_size:
-    check_unblocked = 0
-    boat_start, dirTemp = rand_pos(boat_size)
-    for i in range(0, boat_size-1):
-      if dirTemp==1:
-        try:
-          if board[boat_start - (8*i)] == "[S]":
-            check_unblocked +=1
-        except:
-          print(i)
-          print(boat_start)
-          print(len(board))
-          print(dirTemp)
-      elif dirTemp==2:
-        if board[boat_start + i] == "[S]":
-          check_unblocked +=1
-      elif dirTemp==3:
-        if board[boat_start + (8*i)] == "[S]":
-          check_unblocked +=1
-      else:
-        try:
-          if board[boat_start - i] == "[S]":
-            check_unblocked +=1
-        except:
-          print(i)
-          print(boat_start)
-          print(len(board))
-          print(dirTemp)
-  return boat_start, dirTemp
-
-def place_boat(boat_size):
-  boat_start, dirTemp = check_ship(boat_size)
-  for i in range(0,boat_size-1):
-    if dirTemp==1:
-      board[boat_start - (8*i)] = "[S]"
-    elif dirTemp==2:
-      board[boat_start + i] = "[S]"
-    elif dirTemp==3:
-      board[boat_start + (8*i)] = "[S]"
-    else:
-      board[boat_start - i] = "[S]"
-  return board
-
-def all_boats():
-  for i in boat_size_list:
-    place_boat(i)
-  return board
-
-
-
-
+def setup_ship(status_list, ship_size, boardsize):
+  def start_loc(status_list, ship_size, boardsize):
+    ship_dir = random.randint(1,4)
+    if ship_dir == 1: #UP
+      x_start = random.randint(1,boardsize)
+      y_start = random.randint(ship_size,boardsize)
+    elif ship_dir == 2: #RIGHT
+      x_start = random.randint(1,boardsize-ship_size)
+      y_start = random.randint(1,boardsize)
+    elif ship_dir == 3: #DOWN
+      x_start = random.randint(1,boardsize)
+      y_start = random.randint(1,boardsize-ship_size)
+    elif ship_dir == 4: #LEFT
+      x_start = random.randint(ship_size,boardsize)
+      y_start = random.randint(1,boardsize)
+    ship_start = y_start*(boardsize-1) + x_start
+    return ship_start, ship_dir
   
-        
-        
-        
-
-    
-
+  def check_ship(ship_start, ship_dir, ship_size, boardsize):
+    if ship_dir == 1:
+      for square in range(0,ship_size):
+        if status_list[ship_start - (square*boardsize)] != '[ ]':
+          return False
+    elif ship_dir == 2:
+      for square in range(0,ship_size):
+        if status_list[ship_start + square] != '[ ]':
+          return False
+    elif ship_dir == 3:
+      for square in range(0,ship_size):
+        if status_list[ship_start + (square*boardsize)] != '[ ]':
+          return False
+    elif ship_dir == 4:
+      for square in range(0,ship_size):
+        if status_list[ship_start - square] != '[ ]':
+          return False
+    print(ship_start)
+    print(ship_dir)
+    print(ship_size)
+    print(boardsize)
+    print(square)
+    return True
+      
+  def update_ship(ship_start, ship_dir, ship_size, boardsize):
+    if ship_dir == 1:
+      for square in range(0,ship_size):
+        status_list[ship_start - (square*boardsize)] = '[X]'
+    elif ship_dir == 2:
+      for square in range(0,ship_size):
+        status_list[ship_start + square] = '[X]'
+    elif ship_dir == 3:
+      for square in range(0,ship_size):
+        status_list[ship_start + (square*boardsize)] = '[X]'
+    elif ship_dir == 4:
+      for square in range(0,ship_size):
+        status_list[ship_start - square] = '[X]'
+    return status_list
   
+  check = False
 
-board = make_board()
-print_board()
-board = all_boats()
-print_board()
+  while check==False:
+    ship_start, ship_dir = start_loc(status_list, ship_size, boardsize)
+    check = check_ship(ship_start, ship_dir, ship_size, boardsize)
+
+  return update_ship(ship_start, ship_dir, ship_size, boardsize)
+
+#calling make_board function and saving lists
+squarenum_list, xpos_list, ypos_list, status_list, squarename_list = make_board(boardsize)
+
+print_board(status_list, boardsize)
 
 
-boat1 = 5
-boat2 = 4
-boat3 = 3
-boat4 = 3
-boat5 = 2
+status_list = setup_ship(status_list, 5, boardsize)
+
+print_board(status_list,8)
+
+
+
+
+

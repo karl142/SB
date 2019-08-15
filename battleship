@@ -2,6 +2,8 @@ import math, random
 
 #Initializations
 boardsize = 8
+ship_num = 5
+ship_size_list = [5,4,3,3,2]
 
 #This function takes size and makes a board square by square. The square number, x coordinate, y coordinate, status, and name (b1,b2...etc) are saved in separate lists and returned.
 def make_board(boardsize):
@@ -59,26 +61,23 @@ def place_ship(status_list, boardsize, ship_size):
     dircount += 1
   if ship_dir == 1:
     for square in range(ship_size):
-      status_list[ship_start-(8*square)] == '[X]'
+      status_list[ship_start-(8*square)-1] == '[X]'
   elif ship_dir == 2: 
     for square in range(ship_size):
-      status_list[ship_start-square] = '[X]'
+      status_list[ship_start+square-1] = '[X]'
   elif ship_dir == 3:
     for square in range(ship_size):
-      status_list[ship_start-(8*square)] != '[X]'
+      status_list[ship_start+(8*square)-1] = '[X]'
   elif ship_dir == 4:
     for square in range(ship_size):
-        status_list[ship_start+square] = '[X]'
+        status_list[ship_start-square-1] = '[X]'
   print(Xnum)
   print(Ynum)
   print(ship_start)
   return status_list
-      
-  
-
-
 
 status_list = make_board(8)
 print_board(status_list, 8)
-status_list = place_ship(status_list, 8, 5)
-print_board(status_list, 8)
+for ship in ship_size_list:
+  status_list = place_ship(status_list, 8, ship)
+  print_board(status_list, 8)

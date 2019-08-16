@@ -64,7 +64,7 @@ def place_ship(status_list, hitspots, boardsize,  ship_size, player):
         ship_dir=dircount
       dircount += 1
   else:
-    ship_dir = random.randint(0,len(directions))
+    ship_dir = random.randint(0,len(directions)-1)
   if ship_dir == 1:
     for square in range(ship_size):
       status_list[ship_start-(8*square)-1] == '[X]'

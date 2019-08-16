@@ -6,6 +6,12 @@ ship_num = 5
 ship_size_list = [5,4,3,3,2]
 
 #This function takes size and makes a board square by square. The square number, x coordinate, y coordinate, status, and name (b1,b2...etc) are saved in separate lists and returned.
+
+def goto(line):
+  global lineNumber
+  line = lineNumber
+
+
 def make_board(boardsize):
   status_list = []
   for square in range(boardsize**2):
@@ -35,12 +41,17 @@ def place_ship(status_list, hitspots, boardsize,  ship_size, player):
       if str(i) in ship_start_s:
         Ynum = Ycount
       Ycount +=1
+    ship_start = ((Ynum - 1)* 8 + Xnum)
   else:
-    Xnum = random.randint(1,8)
-    Ynum = random.randint(1,8)
+    all = list(range(1,64))
+    possible_starts = [i for j, i in enumerate(all) if j-1 not in hitspots]
+    squaresrand = random.randint(0,len(possible_starts))
+    try:
+      ship_start = possible_starts[squaresrand]
+    except:
+      print(possible_starts)
+      print(squaresrand)
   
-  ship_start = ((Ynum - 1)* 8 + Xnum)
-
   directions = []
   if ship_start <= 32:
     directions.append("down")
@@ -50,6 +61,7 @@ def place_ship(status_list, hitspots, boardsize,  ship_size, player):
     directions.append("left")
   if ship_start % boardsize <= 4:
     directions.append("right")
+
   if player == True:
     print("\n\nPossible directions: \n")
     for direction in directions:
@@ -65,32 +77,31 @@ def place_ship(status_list, hitspots, boardsize,  ship_size, player):
       dircount += 1
   else:
     ship_dir = random.randint(0,len(directions)-1)
-  if ship_dir == 1:
-    for square in range(ship_size):
+  for square in range(ship_size):
+    if ship_dir == 1:
       status_list[ship_start-(8*square)-1] == '[X]'
       hitspots.append(ship_start-(8*square)-1)
-  elif ship_dir == 2: 
-    for square in range(ship_size):
+    elif ship_dir == 2: 
       status_list[ship_start+square-1] = '[X]'
       hitspots.append(ship_start+square-1)
-  elif ship_dir == 3:
-    for square in range(ship_size):
+    elif ship_dir == 3:
       status_list[ship_start+(8*square)-1] = '[X]'
       hitspots.append(ship_start+(8*square)-1)
-  elif ship_dir == 4:
-    for square in range(ship_size):
+    elif ship_dir == 4:
       status_list[ship_start-square-1] = '[X]'
       hitspots.append(ship_start-square-1)
 
   return status_list, hitspots
 
-status_list = make_board(8)
 hitspots = []
-for ship in ship_size_list:
-  status_list, hitspots = place_ship(status_list, hitspots, 8, ship, False)
+while len(hitspots) < 17:
+  status_list = make_board(8)
+  hitspots = []
+  for ship in ship_size_list:
+    status_list, hitspots = place_ship(status_list, hitspots, 8, ship, False)
 
-comp_ships = hitspots
-print(comp_ships)
+  comp_ships = hitspots
+  print(comp_ships)
 
 
 status_list = make_board(8)
@@ -102,5 +113,3 @@ for ship in ship_size_list:
 
 player_ships = hitspots
 player_board = status_list
-
-

@@ -18,23 +18,26 @@ def print_board(status_list, boardsize):
   for line in range(boardsize):
     print(str(line+1) + "  " + board_s[line*(boardsize*5): line*(boardsize*5)+(boardsize*5)] + '\n')
 
-def place_ship(status_list, boardsize, ship_size):
-  ship_start_s = input("The current ship is " + str(ship_size) + ". Pick a starting location (e.g. A1) \n\n")
-  
-  Xcount=1
-  Xlist=['A','B','C','D','E','F','G','H']
-  for i in Xlist:
-    if i in ship_start_s:
-      Xnum = Xcount
-    Xcount += 1
+def place_ship(status_list, hitspots, boardsize,  ship_size, player):
+  if player == True:
+    ship_start_s = input("The current ship is " + str(ship_size) + ". Pick a starting location (e.g. A1) \n\n")
 
-  Ycount=1
-  Ylist=['1','2','3','4','5','6','7','8']
-  for i in Ylist:
-    if str(i) in ship_start_s:
-      Ynum = Ycount
-    Ycount +=1
+    Xcount=1
+    Xlist=['A','B','C','D','E','F','G','H']
+    for i in Xlist:
+      if i in ship_start_s:
+        Xnum = Xcount
+      Xcount += 1
 
+    Ycount=1
+    Ylist=['1','2','3','4','5','6','7','8']
+    for i in Ylist:
+      if str(i) in ship_start_s:
+        Ynum = Ycount
+      Ycount +=1
+  else:
+    Xnum = random.randint(1,8)
+    Ynum = random.randint(1,8)
   
   ship_start = ((Ynum - 1)* 8 + Xnum)
 
@@ -47,37 +50,57 @@ def place_ship(status_list, boardsize, ship_size):
     directions.append("left")
   if ship_start % boardsize <= 4:
     directions.append("right")
-  print("\n\nPossible directions: \n")
-  for direction in directions:
-    print(direction)
+  if player == True:
+    print("\n\nPossible directions: \n")
+    for direction in directions:
+      print(direction)
   
-  ship_dir_s = input("\nChoose a direction for the rest of the ship: ")
+    ship_dir_s = input("\nChoose a direction for the rest of the ship: ")
 
-  dircount = 1
-  dirlist = ['up', 'right', 'down', 'left']
-  for i in dirlist:
-    if i == ship_dir_s:
-      ship_dir=dircount
-    dircount += 1
+    dircount = 1
+    dirlist = ['up', 'right', 'down', 'left']
+    for i in dirlist:
+      if i == ship_dir_s:
+        ship_dir=dircount
+      dircount += 1
+  else:
+    ship_dir = random.randint(0,len(directions))
   if ship_dir == 1:
     for square in range(ship_size):
       status_list[ship_start-(8*square)-1] == '[X]'
+      hitspots.append(ship_start-(8*square)-1)
   elif ship_dir == 2: 
     for square in range(ship_size):
       status_list[ship_start+square-1] = '[X]'
+      hitspots.append(ship_start+square-1)
   elif ship_dir == 3:
     for square in range(ship_size):
       status_list[ship_start+(8*square)-1] = '[X]'
+      hitspots.append(ship_start+(8*square)-1)
   elif ship_dir == 4:
     for square in range(ship_size):
-        status_list[ship_start-square-1] = '[X]'
-  print(Xnum)
-  print(Ynum)
-  print(ship_start)
-  return status_list
+      status_list[ship_start-square-1] = '[X]'
+      hitspots.append(ship_start-square-1)
+
+  return status_list, hitspots
+
+status_list = make_board(8)
+hitspots = []
+for ship in ship_size_list:
+  status_list, hitspots = place_ship(status_list, hitspots, 8, ship, False)
+
+comp_ships = hitspots
+print(comp_ships)
+
 
 status_list = make_board(8)
 print_board(status_list, 8)
+hitspots = []
 for ship in ship_size_list:
-  status_list = place_ship(status_list, 8, ship)
+  status_list, hitspots = place_ship(status_list, hitspots, 8, ship, True)
   print_board(status_list, 8)
+
+player_ships = hitspots
+player_board = status_list
+
+

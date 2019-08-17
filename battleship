@@ -1,58 +1,113 @@
-def make_board():
-  board=[]
-  for i in range(64):
-    board.append("[ ]")
-  return board
+import math, random
 
-def print_board():
-  global board
-  sboard = "  ".join(board)
-  for i in range(8):
-    print(sboard[i*40: (i*40)+40] + '\n')
+#Initializations
+boardsize = 8
+ship_num = 5
+ship_size_list = [5,4,3,3,2]
 
-def rand_pos(boat_size):
-  dirTemp = random.randint(4):
-  if dirTemp==1: # UP
-    xTemp = random.randint(8)
-    yTemp = random.randint(boat_size:8)
-    dirMove=-1
-  elif dirTemp==2: # RIGHT
-    xTemp = random.randint(8-boat_size)
-    yTemp = random.randint(8)
-    dirMove=1
-  elif dirTemp==3: # DOWN
-    xTemp = random.randint(8-boat_size)
-    yTemp = random.randint(8)
-    dirMove=1
-  else: # LEFT
-    xTemp = random.randint(boat_size:8)
-    yTemp = random.randint(8)
-    dirMove=-1
+#This function takes size and makes a board square by square. The square number, x coordinate, y coordinate, status, and name (b1,b2...etc) are saved in separate lists and returned.
+def make_board(boardsize):
+  status_list = []
+  for square in range(boardsize**2):
+    status_list.append('[ ]')
+  return status_list
+
+def print_board(status_list, boardsize):
+  board_s = "  ".join(status_list)
+  print("    A    B    C    D    E    F    G    H \n")
+  for line in range(boardsize):
+    print(str(line+1) + "  " + board_s[line*(boardsize*5): line*(boardsize*5)+(boardsize*5)] + '\n')
+
+def place_ship(status_list, boardsize, ship_size, ship_squares):
+  ship_start_s = input("The current ship is " + str(ship_size) + ". Pick a starting location (e.g. A1) \n\n")
   
-  return xTemp, yTemp, dirTemp, dirMove
+  Xcount=1
+  Xlist=['A','B','C','D','E','F','G','H']
+  for i in Xlist:
+    if i in ship_start_s:
+      Xnum = Xcount
+    Xcount += 1
 
+  Ycount=1
+  Ylist=['1','2','3','4','5','6','7','8']
+  for i in Ylist:
+    if str(i) in ship_start_s:
+      Ynum = Ycount
+    Ycount +=1
+  
+  ship_start = ((Ynum - 1)* 8 + Xnum)
 
+  directions = []
+  if ship_start <= 32:
+    directions.append("down")
+  elif ship_start >= 33:
+    directions.append("up")
+  elif ship_start % boardsize >= 5:
+    directions.append("left")
+  elif ship_start % boardsize <= 4:
+    directions.append("right")
+  print("\n\nPossible directions: \n")
+  for direction in directions:
+    print(direction)
+  
+  ship_dir_s = input("\nChoose a direction for the rest of the ship: ")
 
-def add_ships():
-  global board
-  solved1=0
-  while solved1==0:
-    
-    xTemp, yTemp, dirTemp = rand_pos()
+  dircount = 1
+  dirlist = ['up', 'right', 'down', 'left']
+  for i in dirlist:
+    if i == ship_dir_s:
+      ship_dir=dircount
+    dircount += 1
+  if ship_dir == 1:
+    for square in range(ship_size):
+      status_list[ship_start-(8*square)-1] = '[X]'
+      
+  elif ship_dir == 2: 
+    for square in range(ship_size):
+      status_list[ship_start+square-1] = '[X]'
+  elif ship_dir == 3:
+    for square in range(ship_size):
+      status_list[ship_start+(8*square)-1] = '[X]'
+  elif ship_dir == 4:
+    for square in range(ship_size):
+        status_list[ship_start-square-1] = '[X]'
 
-    for i in range(boatsize):
-      if board
-    
+  return status_list
+
+def comp_place_ship(status_list, boardsize, ship_size, ship_squares):
+
+  # random number
+  # get possible directions
+  # place if no interceptions
+  free_squares_list = []
+  all_squares_list = list(range(1,boardsize**2+1))
+  for i in range(1,len(all_squares_list)+1):
+    if i not in ship_squares:
+      free_squares_list.append(i)
 
   
+  
+  directions = []
+  fault=0
+  if ship_start <= :
+    for i in range(ship_size):
+      if status_list[ship_start-(8*square)-1] == '[X]':
+        fault=1
+    directions.append("down")
+  elif ship_start >= 33:
+    directions.append("up")
+  if ship_start % boardsize >= ship_size or ship_start % boardsize == 0:
+    directions.append("left")
+  elif ship_start % boardsize <= ship_size-1 and ship_start % boardsize != 0:
+    directions.append("right")
 
-board = make_board()
-print_board()
 
 
 
-boat1 = 5
-boat2 = 4
-boat3 = 3
-boat4 = 3
-boat5 = 2
+status_list = make_board(8)
+print_board(status_list, 8)
+ship_squares = []
+for ship in ship_size_list:
+  status_list = place_ship(status_list, 8, ship, ship_squares)
+  print_board(status_list, 8)
+

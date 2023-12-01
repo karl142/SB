@@ -1,0 +1,24 @@
+import pandas as pd
+
+df = pd.read_csv('C:\\Users\\Cody.McCants\\OneDrive - Red Savannah Ltd\\AoC_1_Input.csv',header=None,index_col=False)
+numberwords = pd.DataFrame(["zero","one" ,"two","three","four","five","six","seven","eight","nine"])
+total = 0 #Running total for answer
+
+for row in df.index:                                                            #Loop through puzzle rows
+    currentstr = df.iloc[row,0]                                                 #Current string to decypher
+    first=False                                                                 #Reset "first"
+    for charind in range(len(currentstr)):                                      #Loop through characters in string
+        if currentstr[charind].isnumeric():                                     #Test if character is a number
+            if first==False:                                                    #If first is not yet assigned number...
+                first=currentstr[charind]                                       #Give first a value
+            last = currentstr[charind]                                          #Give last a value
+        else:
+            for num in range(len(numberwords)):                                 #For every number from 0-9
+                currentnum=numberwords.iloc[num,0]                              #Sets the first number string to search for
+                if charind + len(currentnum)<=len(currentstr):                  #If the number string cannot fit in currentstring, ignore
+                    if currentstr[charind:charind+len(currentnum)]==currentnum: #If number string fits next x characters
+                        if first==False:                                        #If first is not yet assigned number...
+                            first=str(num)                                      #Give first a value
+                        last=str(num)                                           #Give last a value
+    total+=int(first+last)                                                      #Add up all 2-digit numbers
+print (total)
